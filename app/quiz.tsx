@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import clickSound from "../assets/sounds/click.mp3";
 import QuestionCard from "../components/QuestionCard";
 import { questionBank } from "../data/questions";
 
@@ -22,12 +23,23 @@ interface Question {
 
 const { width } = Dimensions.get("window");
 const playSound = async () => {
-  const { sound } = await Audio.Sound.createAsync(
-    require("../assets/sounds/click.mp3"), // add your sound file here
-  );
-  await sound.playAsync();
+  try {
+    const { sound } = await Audio.Sound.createAsync(clickSound);
+    await sound.playAsync();
+    // optional: unload after playing to free memory
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if ("didJustFinish" in status && status.didJustFinish) {
+        sound.unloadAsync();
+      }
+    });
+  } catch (error) {
+    console.log("Error playing sound:", error);
+  }
 };
 const QuizScreen = () => {
+  const params = useLocalSearchParams();
+  const isSoundOn = params.isSoundOn === "true";
+  const isHapticsOn = params.isHapticsOn === "true";
   const { category } = useLocalSearchParams<{ category: string }>();
 
   const [showNext, setShowNext] = useState(false);
