@@ -1,0 +1,113 @@
+// import React from "react";
+// import {
+//   Animated,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+// } from "react-native";
+
+// interface QuestionsCardProps {
+//   question: string;
+//   options: string[];
+//   category: string;
+//   correctAnswer: string;
+//   selectedAnswer: string | null;
+//   onSelect: (option: string) => void;
+//   scaleAnim?: Animated.Value;
+// }
+
+// const QuestionCard = ({
+//   question,
+//   options,
+//   category,
+//   correctAnswer,
+//   selectedAnswer,
+//   onSelect,
+//   scaleAnim,
+// }: QuestionsCardProps) => {
+//   return (
+//     <Animated.View
+//       style={[styles.card, scaleAnim && { transform: [{ scale: scaleAnim }] }]}
+//     >
+//       <View style={styles.categoryCounter}>
+//         <Text style={styles.category}>{category.toUpperCase()}</Text>
+//       </View>
+//       <Text style={styles.question}>{question}</Text>
+//       {options.map((option, index) => {
+//         const isSelected = option === selectedAnswer;
+//         let backgroundColor = "#f2f2f2";
+//         let borderColor = "#ccc";
+//         if (selectedAnswer) {
+//           if (option === correctAnswer) {
+//             backgroundColor = "#4CAF50"; // green for correct
+//             borderColor = "#D32F2F";
+//           } else if (isSelected && selectedAnswer !== correctAnswer) {
+//             backgroundColor = "#F44336"; // red for wrong
+//             borderColor = "#D32F2F";
+//           } else {
+//             backgroundColor = "#eee"; // neutral
+//             borderColor = "#ccc";
+//           }
+//         }
+//         return (
+//           <TouchableOpacity
+//             key={index}
+//             style={[styles.option, { backgroundColor }]}
+//             onPress={() => onSelect(option)}
+//           >
+//             <Text style={styles.optionText}>{option}</Text>
+//           </TouchableOpacity>
+//         );
+//       })}
+//     </Animated.View>
+//   );
+// };
+
+// export default QuestionCard;
+
+// const styles = StyleSheet.create({
+//   card: {
+//     backgroundColor: "#fff",
+//     borderRadius: 20,
+//     padding: 20,
+//     marginVertical: 20,
+//     shadowColor: "#000",
+//     shadowOffset: { width: 0, height: 8 },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 10,
+//     elevation: 10,
+//   },
+//   categoryCounter: {
+//     backgroundColor: "#2196F3",
+//     alignSelf: "flex-start",
+//     paddingHorizontal: 12,
+//     paddingVertical: 4,
+//     borderRadius: 12,
+//     marginBottom: 12,
+//   },
+//   category: {
+//     color: "#fff",
+//     fontSize: 16,
+//     fontWeight: "bold",
+//   },
+//   question: {
+//     fontSize: 20,
+//     fontWeight: "700",
+//     marginBottom: 20,
+//     color: "#333",
+//   },
+//   option: {
+//     paddingVertical: 16,
+//     paddingHorizontal: 20,
+//     borderRadius: 30,
+//     marginBottom: 12,
+//     borderWidth: 2,
+//   },
+//   optionText: {
+//     color: "#333",
+//     fontSize: 16,
+//     fontWeight: "600",
+//     textAlign: "center",
+//   },
+// });

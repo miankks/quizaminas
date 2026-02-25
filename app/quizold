@@ -1,0 +1,218 @@
+// import React, { useEffect, useRef, useState } from "react";
+// import {
+//   Animated,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+// } from "react-native";
+// // import QuestionCard from "../components/QuestionCard";
+// import { router, useLocalSearchParams } from "expo-router";
+// import QuestionCard from "../components/QuestionCardold";
+// import colors from "../constants/colors";
+// import { questionBank } from "../data/questions";
+
+// const QuizScreen = () => {
+//   const [questions, setQuestions] = useState<any[]>([]);
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const [score, setScore] = useState(0);
+//   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+//   const [showNext, setShowNext] = useState(false);
+
+//   const { category } = useLocalSearchParams<{ category: string }>();
+
+//   const fadeAnim = useRef(new Animated.Value(0)).current;
+//   const scaleAmin = useRef(new Animated.Value(1)).current;
+//   const slideAnim = useRef(new Animated.Value(100)).current;
+//   const handlePressAnimation = () => {
+//     Animated.sequence([
+//       Animated.timing(scaleAmin, {
+//         toValue: 0.95,
+//         duration: 100,
+//         useNativeDriver: true,
+//       }),
+//       Animated.timing(scaleAmin, {
+//         toValue: 1,
+//         duration: 100,
+//         useNativeDriver: true,
+//       }),
+//     ]).start();
+//   };
+
+//   // Whenever question changes
+//   useEffect(() => {
+//     //reset
+//     fadeAnim.setValue(0);
+//     Animated.timing(fadeAnim, {
+//       toValue: 1,
+//       duration: 500,
+//       useNativeDriver: true,
+//     }).start();
+//   }, [currentIndex, fadeAnim]);
+
+//   // shuffle question + options once when game starts
+//   useEffect(() => {
+//     if (!category) return;
+
+//     const categoryQuestions = questionBank[category];
+
+//     if (!categoryQuestions) return;
+
+//     const shuffledQuestions = [...categoryQuestions]
+//       .sort(() => Math.random() - 0.5)
+//       .slice(0, 5)
+//       .map((q) => {
+//         const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+//         return {
+//           ...q,
+//           options: shuffledOptions,
+//         };
+//       });
+//     setQuestions(shuffledQuestions);
+//   }, [category]);
+
+//   // wait for questions to be ready
+//   if (questions.length === 0) return null;
+
+//   const currentQuestion = questions[currentIndex];
+
+//   const handleAnwer = (option: string) => {
+//     // prevent double clicking
+//     if (selectedAnswer) return;
+
+//     setSelectedAnswer(option);
+//     const isCorrect = option === currentQuestion.correctAnswer;
+
+//     if (isCorrect) {
+//       setScore((prev) => prev + 1);
+//     }
+//     // Animate Next button up
+//     Animated.spring(slideAnim, {
+//       toValue: 0,
+//       friction: 6,
+//       tension: 120,
+//       useNativeDriver: true,
+//     }).start();
+//     setShowNext(true);
+//   };
+
+//   const handleNext = () => {
+//     setShowNext(false);
+//     setSelectedAnswer(null);
+//     slideAnim.setValue(100);
+
+//     if (currentIndex < questions.length - 1) {
+//       setCurrentIndex((prev) => prev + 1);
+//     } else {
+//       router.push({ pathname: "/result", params: { score: score + "" } });
+//     }
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <View
+//         style={[
+//           styles.progressBarContainer,
+//           { width: `${((currentIndex + 1) / questions.length) * 100}%` },
+//         ]}
+//       ></View>
+//       <Text style={styles.progress}>
+//         Question {currentIndex + 1} / {questions.length}
+//       </Text>
+//       <Animated.View style={{ opacity: fadeAnim }}>
+//         <QuestionCard
+//           question={currentQuestion.question}
+//           options={currentQuestion.options}
+//           category={category}
+//           selectedAnswer={selectedAnswer}
+//           correctAnswer={currentQuestion.correctAnswer}
+//           onSelect={(option) => {
+//             handlePressAnimation();
+//             handleAnwer(option);
+//           }}
+//         />
+//       </Animated.View>
+//       {showNext && (
+//         <Animated.View style={{ transform: [{ translateY: slideAnim }] }}>
+//           <TouchableOpacity
+//             style={styles.nextButton}
+//             onPress={() => {
+//               handleNext();
+//             }}
+//           >
+//             <Text style={styles.nextButtonText}>
+//               {currentIndex + 1 < questions.length ? "Next" : "See results"}
+//             </Text>
+//           </TouchableOpacity>
+//         </Animated.View>
+//       )}
+//     </View>
+//   );
+// };
+
+// export default QuizScreen;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: colors.background,
+//     padding: 20,
+//     justifyContent: "center",
+//   },
+//   progress: {
+//     fontSize: 16,
+//     marginBottom: 10,
+//     color: colors.dark,
+//   },
+//   question: {
+//     fontSize: 20,
+//     fontWeight: "bold",
+//     marginBottom: 20,
+//   },
+//   option: {
+//     padding: 15,
+//     borderRadius: 10,
+//     marginBottom: 10,
+//     shadowColor: "#000",
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 3.84,
+//     elevation: 5,
+//   },
+//   optionText: {
+//     fontSize: 16,
+//   },
+//   nextButton: {
+//     marginTop: 30,
+//     backgroundColor: "#2196F3",
+//     borderRadius: 30,
+//     alignItems: "center",
+//     height: 100,
+//     textAlign: "center",
+//     justifyContent: "center",
+//   },
+//   nextButtonText: {
+//     color: "white",
+//     fontSize: 32,
+//     fontWeight: "bold",
+//   },
+//   progressBarContainer: {
+//     width: "100%",
+//     height: 10,
+//     backgroundColor: "green",
+//     borderRadius: 5,
+//     marginBottom: 10,
+//     overflow: "hidden",
+//   },
+//   progressBarFill: {
+//     height: "100%",
+//     backgroundColor: "#4CAF50",
+//     borderRadius: 5,
+//   },
+//   progressText: {
+//     fontSize: 14,
+//     marginBottom: 15,
+//     color: "#333",
+//     textAlign: "center",
+//   },
+// });
